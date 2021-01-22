@@ -28,13 +28,20 @@ def _download_data():
     return x_train, y_train, x_test, y_test
 
 
+def _preprocess_data(x_train, y_train):
+    x_train = x_train / 255.0
+
+    y_train = utils.to_categorical(y_train)
+
 def train_and_evaluate(batch_size, epoch, job_dir, output_path):
 
     # Download data
     x_train, y_train, x_test, y_test = _download_data()
 
     # Processes the data
-
+    x_train, y_train = _preprocess_data(x_train, y_train)
+    x_test, y_test = _preprocess_data(x_test, y_test)
+    
     # Build the model
 
     # Train the model
