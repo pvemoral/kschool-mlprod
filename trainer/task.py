@@ -2,9 +2,44 @@
 
 import logging.config
 import argparse
+import numpy as np
+import matplotlib.pyplot as plt
+
+from tensorflow.keras import models
+from tensorflow.keras import layers
+from tensorflow.keras import activations
+
+#importar datos
+from tensorflow.keras import datasets
+from tensorflow.keras.utils import to_categorical
+
+from tensorflow.keras import optimizers
+from tensorflow.keras import losses
+from tensorflow.keras import metrics
+
+
+
+def _download_data():
+    train, test = datasets.mnist.load_data()
+    
+    x_train, y_train = train
+    x_test, y_test = test
+
+    return x_train, y_train, x_test, y_test
 
 
 def train_and_evaluate(batch_size, epoch, job_dir, output_path):
+
+    # Download data
+    x_train, y_train, x_test, y_test = _download_data()
+
+    # Processes the data
+
+    # Build the model
+
+    # Train the model
+
+    # Evalutate de model
     pass
 
 def main():
