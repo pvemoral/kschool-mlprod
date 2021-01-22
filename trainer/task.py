@@ -33,6 +33,19 @@ def _preprocess_data(x_train, y_train):
 
     y_train = utils.to_categorical(y_train)
 
+
+def _build_model():
+    m = models.Sequential()
+
+    m.add(layers.Input((28,28), name='my_input_layer'))
+    m.add(layers.Flatten())
+    m.add(layers.Dense(128, activation=activations.relu))
+    m.add(layers.Dense(64, activation=activations.relu))
+    m.add(layers.Dense(32, activation=activations.relu))
+    m.add(layers.Dense(10, activation=activations.softmax))
+
+    return model
+
 def train_and_evaluate(batch_size, epoch, job_dir, output_path):
 
     # Download data
@@ -44,6 +57,7 @@ def train_and_evaluate(batch_size, epoch, job_dir, output_path):
     
     # Build the model
 
+    model = _build_model()
     # Train the model
 
     # Evalutate de model
