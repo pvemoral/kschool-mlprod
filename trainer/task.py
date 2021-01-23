@@ -4,6 +4,8 @@ import logging.config
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+import os
+import time
 
 from tensorflow.keras import models
 from tensorflow.keras import layers
@@ -17,6 +19,8 @@ from tensorflow.keras import optimizers
 from tensorflow.keras import losses
 from tensorflow.keras import metrics
 from tensorflow.keras import utils
+
+from tensorflow.keras import callbacks
 
 LOGGER = logging.getLogger()
 
@@ -67,11 +71,21 @@ def train_and_evaluate(batch_size, epoch, job_dir, output_path):
     # Build the model
 
     model = _build_model()
-    model.compile(loss=losses.categorical_crossentropy, 
-                  optimizer=optimizers.Adam(), 
-                  metrics=[metrics.categorical_crossentropy])
+    model.compile(loss=losses.categorical_crossentropy,
+                  optimizer=optimizers.Adam(),
+                  metrics=[metrics.categorical_accuracy])
     # Train the model
-    model.fit(x_train_p, y_train_p, batch_size=batch_size, epochs=epoch)
+    logdir = os.path.join(job_dir,"logs/scalars/" + time.strftime("%Y%m%d-%H%M%S"))
+
+    #Callback para tensorflow
+    #Sirve para ver el proceso de entrenamiento fuera de los Logs
+
+    tb_callback = callbacks.TensorBoard(log_dir=logdir)
+    model.fit(x_train_p, 
+              y_train_p, 
+              batch_size=batch_size, 
+              epochs=epoch,
+              callbacks=[tb_callback])
 
     # Evalutate de model
     loss_value, accuracy = model.evaluate(x_test_p, y_test_p)
