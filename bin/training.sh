@@ -12,5 +12,5 @@ gcloud ai-platform jobs submit training mnist_`date +"%s"` \
     --job-dir gs://kschool-dl-20210123/tmp \
     -- \
     --epochs $EPOCHS \
-    --batch_size $BATCH_SIZE \
+    --batch-size $BATCH_SIZE \
     --model-output-path gs://kschool-dl-20210123/models \
