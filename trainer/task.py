@@ -22,7 +22,10 @@ from tensorflow.keras import utils
 
 from tensorflow.keras import callbacks
 
+from . import __version__
+
 LOGGER = logging.getLogger()
+VERSION = __version__
 
 def _download_data():
     logging.info("Download data")
@@ -59,7 +62,7 @@ def _train_model(model, x_train, y_train, batch_size, epochs, validation_split=0
     return model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs)
     
 
-def train_and_evaluate(batch_size, epoch, job_dir, output_path):
+def train_and_evaluate(batch_size, epoch, job_dir, model_output_path):
 
     # Download data
     x_train, y_train, x_test, y_test = _download_data()
@@ -91,6 +94,10 @@ def train_and_evaluate(batch_size, epoch, job_dir, output_path):
     loss_value, accuracy = model.evaluate(x_test_p, y_test_p)
     logging.info("loss_value:{loss_value}, accuracy:{accuracy}".format(loss_value = loss_value, accuracy = accuracy))
 
+    # Save model in TF SavedModel Format
+    model_dir = os.path.join(model_output_path, VERSION)
+    models.save_model(model, model_dir, save_format='tf')
+
     #return loss_value, accuracy
 
 def main():
@@ -112,9 +119,9 @@ def main():
     batch_size = args.batch_size
     epochs = args.epochs
     job_dir = args.job_dir
-    output_path = args.model_output_path
+    model_output_path = args.model_output_path
 
-    train_and_evaluate(batch_size, epochs, job_dir, output_path)
+    train_and_evaluate(batch_size, epochs, job_dir, model_output_path)
     pass
 
 if __name__ == "__main__":
