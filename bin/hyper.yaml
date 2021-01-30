@@ -1,8 +1,8 @@
 trainingInput:
   hyperparameters:
     goal: MAXIMIZE
-    hyperparameterMetrigTag: accuracy_live_class
-    maxTrial: 15
+    hyperparameterMetricTag: accuracy_live_class
+    maxTrials: 15
     maxParallelTrials: 5
     enableTrialEarlyStopping: True
     params:
@@ -11,6 +11,11 @@ trainingInput:
       minValue: 15
       maxValue: 75
       scaleType: UNIT_LINEAR_SCALE
+    - parameterName: model-type
+      type: CATEGORICAL
+      categoricalValues:
+      - Dense
+      - Conv
     - parameterName: batch-size
       type: DISCRETE
       discreteValues:

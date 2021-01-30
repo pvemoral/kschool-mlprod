@@ -9,7 +9,7 @@ gcloud ai-platform jobs submit training mnist_`date +"%s"` \
     --module-name trainer.task \
     --region europe-west1 \
     --job-dir gs://$BUCKET/tmp \
-    --config ./bin/hyper.yaml
+    --config ./bin/hyper.yaml \
     -- \
     --model-output-path gs://$BUCKET/models \
-    --hypertune
+    --hypertune 
