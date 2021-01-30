@@ -7,6 +7,8 @@ import matplotlib.pyplot as plt
 import os
 import time
 
+import tensorflow as tf
+
 from tensorflow.keras import models
 from tensorflow.keras import layers
 from tensorflow.keras import activations
@@ -98,6 +100,17 @@ def train_and_evaluate(batch_size, epoch, is_hypertune, job_dir, model_output_pa
         # Save model in TF SavedModel Format
         model_dir = os.path.join(model_output_path, VERSION)
         models.save_model(model, model_dir, save_format='tf')
+    else:
+        # communicate the result of the evaluate of the model to the cosole
+        metric_tag = 'accuracy_live_class'
+        # debe ser subdirectorio del job_dir a un subdirectorio del TAG
+        eval_path = os.path.join(job_dir, metric_tag)
+        writer = tf.summary.create_file_writer(eval_path)
+
+        with writer.as_default():
+            # escribiré la metrica i el valor de la métrica
+            tf.summary(metric_tag, accuracy, step=epoch)
+        writer.flush()
 
     #return loss_value, accuracy
 
