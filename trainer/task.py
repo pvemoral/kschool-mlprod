@@ -62,7 +62,7 @@ def _train_model(model, x_train, y_train, batch_size, epochs, validation_split=0
     return model.fit(x_train, y_train, batch_size=batch_size, epochs=epochs)
     
 
-def train_and_evaluate(batch_size, epoch, job_dir, model_output_path):
+def train_and_evaluate(batch_size, epoch, is_hypertune, job_dir, model_output_path):
 
     # Download data
     x_train, y_train, x_test, y_test = _download_data()
@@ -94,9 +94,10 @@ def train_and_evaluate(batch_size, epoch, job_dir, model_output_path):
     loss_value, accuracy = model.evaluate(x_test_p, y_test_p)
     logging.info("loss_value:{loss_value}, accuracy:{accuracy}".format(loss_value = loss_value, accuracy = accuracy))
 
-    # Save model in TF SavedModel Format
-    model_dir = os.path.join(model_output_path, VERSION)
-    models.save_model(model, model_dir, save_format='tf')
+    if not is_hypertune:
+        # Save model in TF SavedModel Format
+        model_dir = os.path.join(model_output_path, VERSION)
+        models.save_model(model, model_dir, save_format='tf')
 
     #return loss_value, accuracy
 
@@ -108,6 +109,10 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--batch-size', type=int, help='Batch size for the training')
     parser.add_argument('--epochs', type=int, help='Number of epochs for the training')
+    # Para informar si vamos a hacer o no el hyperTuning
+    parser.add_argument('--hypertune', action='store_true', help='This is a hypertunning job')
+    
+    
     # Estos parámetros son opciones de para AI platform
     # '--job-dir' obligatorio
     # '--model-output-path' path donde escribiremos el binario del modelo después de entrenarlo y que utilizaremos en producción.
@@ -115,13 +120,13 @@ def main():
     parser.add_argument('--model-output-path', help='Path to write the SaveModel format')
 
     args = parser.parse_args()
-
     batch_size = args.batch_size
     epochs = args.epochs
+    is_hypertune = args.hypertune
     job_dir = args.job_dir
     model_output_path = args.model_output_path
 
-    train_and_evaluate(batch_size, epochs, job_dir, model_output_path)
+    train_and_evaluate(batch_size, epochs, is_hypertune, job_dir, model_output_path)
     pass
 
 if __name__ == "__main__":
